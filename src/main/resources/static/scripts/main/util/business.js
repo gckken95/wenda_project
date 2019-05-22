@@ -23,18 +23,12 @@
             Action[bFollow ? 'unFollowUser' : 'followUser']({
                 userId: sId,
                 call: function (oResult) {
-                    if (oResult.code === 999) {
-                        // 未登录
-                        alert('未登录');
-                        window.location.href = '/reglogin?next=' + window.encodeURI(window.location.href);
-                        return;
-                    } else if (oResult.code === 0) {
-                        // 修改标记位
-                        oEl.attr('data-status', bFollow ? '0' : '1');
-                        // 其他操作
-                    } else {
-                        alert('出现错误，请重试');
-                    }
+                    // 修改标记位
+                    oEl.attr('data-status', bFollow ? '0' : '1');
+                    // 按钮颜色
+                    oEl.removeClass('zg-btn-follow zg-btn-unfollow').addClass(bFollow ? 'zg-btn-follow' : 'zg-btn-unfollow');
+                    // 文字
+                    oEl.html(bFollow ? '关注' : '取消关注');
                 },
                 error: function (oResult) {
                     alert('出现错误，请重试');
@@ -46,9 +40,11 @@
         });
     }
 
-    function fFollowQuestion() {
+    function fFollowQuestion(oConf) {
         var that = this;
-        $(document).on('click', 'js-follow-question', function (oEvent) {
+        var oCountEl = $(oConf.countEl);
+        var oListEl = $(oConf.listEl);
+        $(document).on('click', '.js-follow-question', function (oEvent) {
             var oEl = $(oEvent.currentTarget);
             var sId = $.trim(oEl.attr('data-id'));
             if (!sId) {
@@ -63,17 +59,20 @@
             Action[bFollow ? 'unFollowQuestion' : 'followQuestion']({
                 questionId: sId,
                 call: function (oResult) {
-                    if (oResult.code === 999) {
-                        // 未登录
-                        alert('未登录');
-                        window.location.href = '/reglogin?next=' + window.encodeURI(window.location.href);
-                        return;
-                    } else if (oResult.code === 0) {
-                        // 修改标记位
-                        oEl.attr('data-status', bFollow ? '0' : '1');
-                        // 其他操作
+                    // 修改标记位
+                    oEl.attr('data-status', bFollow ? '0' : '1');
+                    // 按钮颜色
+                    oEl.removeClass('zg-btn-white zg-btn-green').addClass(bFollow ? 'zg-btn-green' : 'zg-btn-white');
+                    // 文字
+                    oEl.html(bFollow ? '关注问题' : '取消关注');
+                    // 修改数量
+                    oCountEl.html(oResult.count);
+                    if (bFollow) {
+                        // 移除用户
+                        oListEl.find('.js-user-' + oResult.id).remove();
                     } else {
-                        alert('出现错误，请重试');
+                        // 显示用户
+                        oListEl.prepend('<a class="zm-item-link-avatar js-user-' + oResult.id + '" href="/user/' + oResult.id + '" data-original_title="' + oResult.name + '"><img src="' + oResult.headUrl + '" class="zm-item-img-avatar"></a>');
                     }
                 },
                 error: function (oResult) {
