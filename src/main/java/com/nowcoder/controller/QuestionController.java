@@ -1,7 +1,8 @@
 package com.nowcoder.controller;
 
-import com.nowcoder.model.HostHolder;
-import com.nowcoder.model.Question;
+import com.nowcoder.model.*;
+import com.nowcoder.service.CommentService;
+import com.nowcoder.service.LikeService;
 import com.nowcoder.service.QuestionService;
 import com.nowcoder.service.UserService;
 import com.nowcoder.util.WendaUtil;
@@ -12,7 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.View;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Controller
@@ -27,6 +31,12 @@ public class QuestionController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    CommentService commentService;
+
+    @Autowired
+    LikeService likeService;
 
     @RequestMapping(value = "/question/add",method = RequestMethod.POST)
     @ResponseBody
@@ -55,7 +65,22 @@ public class QuestionController {
     @RequestMapping(value = "question/{qid}",method = RequestMethod.GET)
     public String questionDetail(Model model, @PathVariable("qid")int qid){
         model.addAttribute("question",questionService.getById(qid));
-        model.addAttribute("user",userService.getUser(questionService.getById(qid).getUserId()));
+
+        List<Comment> commentList=commentService.getCommentByEntity(EntityType.ENTITY_QUESTION,qid);
+        List<ViewObject> comments=new ArrayList<>();
+        for(Comment comment:commentList){
+            ViewObject vo=new ViewObject();
+            vo.set("comment",comment);
+            if(hostHolder.getUser()==null){
+                vo.set("liked",0);
+            }else{
+                vo.set("liked",likeService.getLikeStatus(hostHolder.getUser().getId(),EntityType.ENTITY_COMMENT,comment.getId()));
+            }
+            vo.set("likeCount",likeService.getLikeCount(EntityType.ENTITY_COMMENT,comment.getId()));
+            vo.set("user",userService.getUser(comment.getUserId()));
+            comments.add(vo);
+        }
+        model.addAttribute("comments",comments);
         return "detail";
     }
 }

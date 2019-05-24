@@ -40,7 +40,7 @@ public class LoginController {
                 }
                 response.addCookie(cookie);
                 if(StringUtils.isNotBlank(next)){
-                    return "redirect:/"+next;
+                    return "redirect:"+next;
                 }
                 return "redirect:/";
             }else {
@@ -73,7 +73,7 @@ public class LoginController {
                 }
                 response.addCookie(cookie);
                 if(StringUtils.isNotBlank(next)){
-                    return "redirect:/"+next;
+                    return "redirect:"+next;
                 }
                 return "redirect:/";
             }else {
@@ -89,7 +89,7 @@ public class LoginController {
     //通过在页面埋next点方式将next传递到reg和login中
 
     @RequestMapping(path = {"/reglogin"},method = {RequestMethod.GET,RequestMethod.POST})
-    public String reglogin(Model model,
+    public String regloginPage(Model model,
                            @RequestParam(value = "next",defaultValue = "",required = false)String next){
         model.addAttribute("next",next);
         return "login";
