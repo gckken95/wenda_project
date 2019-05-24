@@ -38,7 +38,7 @@ public class CommentController {
         try {
             Comment comment = new Comment();
             if (hostHolder.getUser() == null) {
-                comment.setUserId(WendaUtil.ANONYMOUS_USER);
+                comment.setUserId(WendaUtil.ANONYMOUS_USERID);
             } else {
                 comment.setUserId(hostHolder.getUser().getId());
             }

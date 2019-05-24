@@ -48,7 +48,7 @@ public class QuestionController {
             question.setCreatedDate(new Date());
             question.setCommentCount(0);
             if (hostHolder.getUser() == null) {
-                question.setUserId(WendaUtil.ANONYMOUS_USER);
+                question.setUserId(WendaUtil.ANONYMOUS_USERID);
             } else {
                 question.setUserId(hostHolder.getUser().getId());
             }
