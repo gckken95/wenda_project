@@ -38,4 +38,8 @@ public class CommentService {
     public int updateStatus(int id,int status){
         return commentDAO.updateStatus(id,status);
     }
+
+    public int getUserCommentCount(int userId){
+        return commentDAO.getUserCommentCount(userId);
+    }
 }

@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
+import java.util.Map;
 
 public class WendaUtil {
     private static final Logger logger = LoggerFactory.getLogger(WendaUtil.class);
@@ -22,6 +23,15 @@ public class WendaUtil {
         JSONObject obj=new JSONObject();
         obj.put("code",code);
         obj.put("msg",msg);
+        return obj.toJSONString();
+    }
+
+    public static String getJSONstring(int code, Map<String,Object> map){
+        JSONObject obj=new JSONObject();
+        obj.put("code",code);
+        for(Map.Entry<String,Object> entry:map.entrySet()){
+            obj.put(entry.getKey(),entry.getValue());
+        }
         return obj.toJSONString();
     }
 

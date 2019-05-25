@@ -1,7 +1,10 @@
 package com.nowcoder.controller;
 
+import com.nowcoder.model.EntityType;
 import com.nowcoder.model.Question;
 import com.nowcoder.model.ViewObject;
+import com.nowcoder.service.CommentService;
+import com.nowcoder.service.FollowService;
 import com.nowcoder.service.QuestionService;
 import com.nowcoder.service.UserService;
 import org.slf4j.Logger;
@@ -29,6 +32,12 @@ public class HomeController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    FollowService followService;
+
+    @Autowired
+    CommentService commentService;
+
 
 
     @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET,RequestMethod.POST})
@@ -43,6 +52,7 @@ public class HomeController {
         for(Question question:questionList){
             ViewObject vo=new ViewObject();
             vo.set("question",question);
+            vo.set("followCount",followService.getFollowerCount(EntityType.ENTITY_QUESTION,question.getId()));
             vo.set("user",userService.getUser(question.getUserId()));
             vos.add(vo);
         }
@@ -52,6 +62,8 @@ public class HomeController {
     @RequestMapping(path = {"/user/{userId}"}, method = {RequestMethod.GET,RequestMethod.POST})
     public String userIndex(Model model,@PathVariable("userId")int userId) {
         model.addAttribute("vos",getQuestions(userId,0,10));
+
+
         return "index";
     }
 }

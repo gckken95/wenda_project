@@ -13,7 +13,11 @@
                 </div>
                 <div class="zm-side-section">
                     <div class="zm-side-section-inner" id="zh-question-side-header-wrap">
-                        <button class="follow-button zg-follow zg-btn-green js-follow">关注问题</button>
+                        #if(${followed})
+                        <button class="follow-button zg-follow zg-btn-white js-follow-question" data-status="1" data-id="${question.id}">取消关注</button>
+                        #else
+                        <button class="follow-button zg-follow zg-btn-green js-follow-question" data-id="${question.id}">关注问题</button>
+                        #end
                         <div class="zg-btn-white goog-inline-block goog-menu-button" id="zh-question-operation-menu" style="-webkit-user-select: none;">
                             <div class="goog-inline-block goog-menu-button-outer-box">
                                 <div class="goog-inline-block goog-menu-button-inner-box">
@@ -27,15 +31,15 @@
                         <div class="zh-question-followers-sidebar">
                             <div class="zg-gray-normal">
                                 <a href="">
-                                    <strong>9</strong>
+                                    <strong>${followUsers.size()}</strong>
                                 </a>人关注该问题
                             </div>
                             <div class="list zu-small-avatar-list zg-clear">
-                                <span class="zm-item-link-avatar">
-                                    <img title="匿名用户" class="zm-item-img-avatar" src="../images/res/aadd7b895_s.jpg"></span>
-                                <a class="zm-item-link-avatar" href="">
-                                    <img src="../images/res/6ceea810748d179f57cac0baa5cf9592_s.jpg" class="zm-item-img-avatar"></a>
 
+                                #foreach($followUser in $followUsers)
+                                <a class="zm-item-link-avatar" href="/user/${followUser.id}" data-original_title="${followUser.name}">
+                                    <img src="${followUser.headUrl}" class="zm-item-img-avatar"></a>
+                                #end
                             </div>
                         </div>
                     </div>
